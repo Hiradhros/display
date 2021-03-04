@@ -100,12 +100,8 @@ int main(void)
 		  LCD_RST_GPIO_Port, LCD_RST_Pin);
   ILI9341_setRotation(2);
   ILI9341_printText("Connecting....", 20, 30, COLOR_WHITE, COLOR_WHITE, 1);
-  // ILI9341_printText("Weather:", 40, 60, COLOR_WHITE, COLOR_WHITE, 1);
- // ILI9341_printText("Time:", 60, 90, COLOR_WHITE, COLOR_WHITE, 1);
-
   ESP_Init("calis", "12345678");
 
-  //ILI9341_SendCommand(ILI9341_TEARING_OFF);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -115,9 +111,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //SP_GetData("T5QZHSI8HXLC4286", Total);
-	  //ILI9341_printText("Dunyadaki en buyuk AMCIK: ",40,60,COLOR_WHITE,COLOR_WHITE,1);
-	  //ILI9341_printText(Total,50,70,COLOR_WHITE,COLOR_WHITE,1);
+
 	  ESP_GetData ("T5QZHSI8HXLC4286", Total);
 
 
