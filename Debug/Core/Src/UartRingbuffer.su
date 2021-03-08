@@ -8,7 +8,7 @@ UartRingbuffer.c:129:5:IsDataAvailable	4	static
 UartRingbuffer.c:134:6:Uart_sendstring	16	static
 UartRingbuffer.c:139:6:Uart_printbase	64	static
 UartRingbuffer.c:159:5:Uart_peek	4	static
-UartRingbuffer.c:172:5:Copy_upto	32	static
-UartRingbuffer.c:206:5:Get_after	32	static
-UartRingbuffer.c:219:5:Wait_for	24	static
-UartRingbuffer.c:253:6:Uart_isr	32	static
+UartRingbuffer.c:173:5:Copy_upto	32	static
+UartRingbuffer.c:207:5:Get_after	32	static
+UartRingbuffer.c:220:5:Wait_for	24	static
+UartRingbuffer.c:254:6:Uart_isr	32	static

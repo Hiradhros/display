@@ -42,7 +42,7 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -52,7 +52,7 @@ UART_HandleTypeDef huart1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_USART1_UART_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -61,8 +61,8 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN 0 */
 // TS_TOUCH_DATA_Def myTS_Handle;
  char Total[100];
- char Deaths[6];
- char Recovered[10];
+ char string[100];
+ char string2[100];
 /* USER CODE END 0 */
 
 /**
@@ -94,25 +94,43 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
-  MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   ILI9341_Init(&hspi1, LCD_CS_GPIO_Port, LCD_CS_Pin, LCD_DC_GPIO_Port, LCD_DC_Pin,
 		  LCD_RST_GPIO_Port, LCD_RST_Pin);
   ILI9341_setRotation(2);
   ILI9341_printText("Connecting....", 20, 30, COLOR_WHITE, COLOR_WHITE, 1);
-  ESP_Init("calis", "12345678");
+  ESP_Init("neyse", "12345678");
 
   /* USER CODE END 2 */
+  ESP_GetData ("T5QZHSI8HXLC4286", Total);
+  ILI9341_printText(Total, 30, 40, COLOR_WHITE, COLOR_WHITE, 1);
+
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
+	  ESP_GetData ("T5QZHSI8HXLC4286", Total);
+	  //ILI9341_printText(Total, 30, 40, COLOR_WHITE, COLOR_WHITE, 1);
+	  HAL_Delay(2000);
+	  ILI9341_Fill(COLOR_NAVY);
+	  ILI9341_printText("Weather:", 20, 30, COLOR_WHITE, COLOR_WHITE, 2);
+	  ILI9341_printText(Total, 40, 60, COLOR_WHITE, COLOR_WHITE, 1);
+	  ILI9341_printText("Date:", 80, 120, COLOR_WHITE, COLOR_WHITE, 2);
+	  ESP_GetData ("RPGNBG4MTVD5HSAA", string);
+	  ILI9341_printText(string, 100, 140, COLOR_WHITE, COLOR_WHITE, 1);
+	  ILI9341_printText("Time:",120, 150, COLOR_WHITE, COLOR_WHITE, 2);
+	  ESP_GetData ("CMSM6ZHZ95RWPGMZ", string2);
+	  ILI9341_printText(string2, 140, 170, COLOR_WHITE, COLOR_WHITE, 1);
+
+
+
+
+
 
     /* USER CODE BEGIN 3 */
-
-	  ESP_GetData ("T5QZHSI8HXLC4286", Total);
 
 
 
@@ -202,35 +220,35 @@ static void MX_SPI1_Init(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
+  * @brief USART2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_USART1_UART_Init(void)
+static void MX_USART2_UART_Init(void)
 {
 
-  /* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN USART2_Init 0 */
 
-  /* USER CODE END USART1_Init 0 */
+  /* USER CODE END USART2_Init 0 */
 
-  /* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN USART2_Init 1 */
 
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE BEGIN USART2_Init 2 */
 
-  /* USER CODE END USART1_Init 2 */
+  /* USER CODE END USART2_Init 2 */
 
 }
 
@@ -246,28 +264,16 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LCD_DC_Pin|LCD_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LCD_DC_Pin|LCD_RST_Pin|LCD_CS_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : LCD_DC_Pin LCD_RST_Pin */
-  GPIO_InitStruct.Pin = LCD_DC_Pin|LCD_RST_Pin;
+  /*Configure GPIO pins : LCD_DC_Pin LCD_RST_Pin LCD_CS_Pin */
+  GPIO_InitStruct.Pin = LCD_DC_Pin|LCD_RST_Pin|LCD_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LCD_CS_Pin */
-  GPIO_InitStruct.Pin = LCD_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LCD_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

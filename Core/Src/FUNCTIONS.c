@@ -46,11 +46,11 @@ void ESP_Init (char *SSID, char *PASSWD)
 	/********* AT+CWJAP="SSID","PASSWD" **********/
 	sprintf (data, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWD);
 	Uart_sendstring(data);
-	//while (!(Wait_for("WIFI GOT IP\r\n\r\nOK\r\n")));
+	while (!(Wait_for("WIFI GOT IP\r\n\r\nOK\r\n")));
 
 	/********* AT+CIPMUX=0 **********/
 	Uart_sendstring("AT+CIPMUX=0\r\n");
-	//while (!(Wait_for("AT+CIPMUX=0\r\r\n\r\nOK\r\n")));
+	while (!(Wait_for("AT+CIPMUX=0\r\r\n\r\nOK\r\n")));
 
 }
 
@@ -58,31 +58,34 @@ void ESP_GetData (char *api_key, char *Total) /*, char *Deaths, char *Recovered)
 {
 	char local_buf[100] = {0};
 	char local_buf2[30] = {0};
-	
-	Uart_sendstring("AT+CIPSTART=\"TCP\",\"api.thingspeak.com\"s\r\n");
-	//while (!(Wait_for("CONNECT\r\n\r\nOK\r\n")));
+	char local_buf3[30] = {0};
+
+	Uart_sendstring("AT+CIPSTART=\"TCP\",\"api.thingspeak.com\",80\r\n");
+	while (!(Wait_for("CONNECT\r\n\r\nOK\r\n")));
 	
 	sprintf (local_buf, "GET /apps/thinghttp/send_request?api_key=%s\r\n", api_key);
 	int len = strlen (local_buf);
 	
 	sprintf (local_buf2, "AT+CIPSEND=%d\r\n", len);
 	Uart_sendstring(local_buf2);
-	//while (!(Wait_for(">")));
+	while (!(Wait_for(">")));
 	
-	//bufclr(local_buf2);
+	bufclr(local_buf2);
 
 	Uart_sendstring (local_buf);
-	//while (!(Wait_for("SEND OK\r\n")));
+	while (!(Wait_for("SEND OK\r\n")));
 	
 
-//	while (!(Wait_for ("\">")));
-	while (!(Copy_upto ("</span>", local_buf2)));
+
+	//Uart_sendstring("amm");
+
+	while (!(Wait_for (":")));
+	while (!(Copy_upto ("\r", local_buf2)));
+
 	len = strlen (local_buf2);
 	snprintf (Total, len,local_buf2);
 
-	//char* yazi = "AMMMMMMMM";
-
-	ILI9341_printText(Total,40,60,COLOR_WHITE,COLOR_WHITE,1);
+	//ILI9341_printText(local_buf2,60,70,COLOR_WHITE,COLOR_WHITE,3);
 
 	/*
 	bufclr(local_buf2);

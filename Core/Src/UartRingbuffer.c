@@ -12,9 +12,9 @@
 
 /**** define the UART you are using  ****/
 
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart2;
 
-#define uart &huart1
+#define uart &huart2
 
 /* put the following in the ISR 
 
@@ -168,6 +168,7 @@ int Uart_peek()
   }
 }
 
+char local_buf[100] = {0};
 
 int Copy_upto (char *string, char *buffertocopyinto)
 {
